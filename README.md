@@ -1,7 +1,47 @@
 # Smart-file-organizer-using-python
-Built a Smart File Organizer using Python to automatically sort and manage files based on their type, improving system organization and productivity.
-Developed a Python-based automation tool that organizes unstructured files into well-defined folders based on file extensions such as documents, images, videos, and audio files. The system scans a selected directory (e.g., Downloads), identifies file types, creates required folders automatically, and moves files to their respective locations.
+import os 
+import shutil
+#folder path you want a organize
+folder_path = os.getcwd() #current working directory
 
-The project leverages Python’s os module for directory and path management and shutil for efficient file operations such as moving and organizing files. This solution reduces manual effort, improves file accessibility, and helps maintain a clean and structured file system.
-
-This project demonstrates practical use of Python for automation, problem-solving, and real-world file management.
+#file type discribe
+file_types = {
+    'Images': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'],
+    'Documents': ['.pdf', '.docx', '.txt', '.xlsx', '.pptx'],
+    'Audio': ['.mp3', '.wav', '.aac', '.flac'], }
+# Create folders if they don't exist
+for folder in file_types.keys(): #Iterate through the keys of the file_types dictionary
+    folder_dir = os.path.join(folder_path, folder)#Create the full path for the folder by joining the folder_path and the folder name
+    if not os.path.exists(folder_dir):#Check if the folder already exists, if not, create it
+        os.makedirs(folder_dir)#Move files to corresponding folders
+        #organize files based on their extensions
+for filename in os.listdir(folder_path):#Iterate through the files in the folder_path
+    file_path = os.path.join(folder_path, filename)#Create the full path for the file by joining the folder_path and the filename
+    if os.path.isfile(file_path):#Check if the path is a file (not a directory)
+        file_extension = os.path.splitext(filename)[1].lower()#Get the file extension and convert it to lowercase
+        for folder, extensions in file_types.items():#Iterate through the file_types dictionary
+            if file_extension in extensions:#Check if the file extension matches any of the extensions in the current folder category
+                shutil.move(file_path, os.path.join(folder_path, folder))#Move the file to the corresponding folder
+                break
+            #organize files
+            for filename in os.listdir(folder_path):#Iterate through the files in the folder_path
+                file_path = os.path.join(folder_path, filename)#Create the full path for the file by joining the folder_path and the filename
+                if os.path.isfile(file_path):#Check if the path is a file (not a directory)
+                    file_extension = os.path.splitext(filename)[1].lower()#Get the file extension and convert it to lowercase
+                    for folder, extensions in file_types.items():#Iterate through the file_types dictionary
+                        if file_extension in extensions:#Check if the file extension matches any of the extensions in the current folder category
+                            shutil.move(file_path, os.path.join(folder_path, folder))#Move the file to the corresponding folder
+                            break 
+                        
+                        #skip folders
+                        if os.path.isdir(file_path):#Check if the path is a directory (not a file)
+                            continue #Skip the directory and move to the next iteration of the loop   
+                        #get file extension
+                        file_extension = os.path.splitext(filename)[1].lower()#Get the file extension and convert it to lowercase
+                        for folder, extensions in file_types.items():#Iterate through the file_types dictionary 
+                            if file_extension in extensions:#Check if the file extension matches any of the extensions in the current folder category
+                                shutil.move(file_path, os.path.join(folder_path, folder))#Move the file to the corresponding folder
+                                break
+                            
+                            print("Files have been organized successfully!" ) # 
+                        
